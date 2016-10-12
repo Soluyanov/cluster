@@ -1,0 +1,11 @@
+{
+  "blueprint" : "blueprint",
+  "default_password" : "9213215111",
+  "host_groups" :[
+    {
+      "name" : "host_group_1",
+      "hosts" : [{"fqdn" : "c6406.ambari.apache.org"}]
+    }
+    
+  ]
+}
