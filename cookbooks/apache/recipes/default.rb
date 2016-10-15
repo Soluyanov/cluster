@@ -1,29 +1,42 @@
 
 
-execute 'add hosts' do
-command "wget -nv http://public-repo-1.hortonworks.com/ambari/centos6/2.x/updates/2.1.0/ambari.repo -O /etc/yum.repos.d/ambari.repo"
-end
-execute 'add hosts' do
-command "echo '192.168.64.105 c6405.ambari.apache.org c6405' >> /etc/hosts"
+
+yum_repository 'ambari' do
+  description "Public ambari repo"
+  baseurl "http://public-repo-1.hortonworks.com/ambari/centos7/2.x/updates/2.2.0.0"
+  gpgkey 'http://public-repo-1.hortonworks.com/ambari/centos7/RPM-GPG-KEY/RPM-GPG-KEY-Jenkins'
+  action :create
 end
 
-execute 'add hosts' do
-command "echo '192.168.64.106 c6406.ambari.apache.org c6406' >> /etc/hosts"
+
+execute 'enable firewalld' do
+command "systemctl enable firewalld"
 end
 
-service 'iptables' do
-  action [:disable, :stop]
+execute 'start firewalld' do
+command "systemctl start firewalld"
 end
 
-execute "install ambari-server" do
-  command "yum install ambari-server -y"
+execute 'add port 8080' do
+command "firewall-cmd --add-port=8080/tcp"
 end
+
+execute 'add port 8440' do
+command "firewall-cmd --add-port=8440/tcp"
+end
+execute 'add port 8441' do
+command "firewall-cmd --add-port=8441/tcp"
+end
+
+package 'ambari-server'
 
 execute "setup ambari-server" do
   command "ambari-server setup -s"
+not_if "rpm -qa | grep -qx 'ambari-server'"
+end
+
+service "ambari-server" do
+  action :start
 end
 
 
-execute "start ambari-server" do
-  command "ambari-server start"
-end
