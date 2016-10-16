@@ -20,12 +20,11 @@ firewalld_port '8440/tcp'
 firewalld_port '8441/tcp'
 
 
-package 'ambari-server' do
-  not_if "rpm -qa | grep -qx 'ambari-server'"
-end
+package 'ambari-server'
 
 execute "setup ambari-server" do
   command "ambari-server setup -s"
+  not_if "ambari-server status | grep 'Stale PID File'"
 end
 
 service "ambari-server" do
