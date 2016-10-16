@@ -9,30 +9,23 @@ yum_repository 'ambari' do
 end
 
 
-execute 'enable firewalld' do
-command "systemctl enable firewalld"
+service 'firewalld' do
+  action [:enable, :start]
 end
 
-execute 'start firewalld' do
-command "systemctl start firewalld"
-end
 
-execute 'add port 8080' do
-command "firewall-cmd --add-port=8080/tcp"
-end
 
-execute 'add port 8440' do
-command "firewall-cmd --add-port=8440/tcp"
-end
-execute 'add port 8441' do
-command "firewall-cmd --add-port=8441/tcp"
-end
+firewalld_port '8080/tcp'
+firewalld_port '8440/tcp'
+firewalld_port '8441/tcp'
 
-package 'ambari-server'
+
+package 'ambari-server' do
+  not_if "rpm -qa | grep -qx 'ambari-server'"
+end
 
 execute "setup ambari-server" do
   command "ambari-server setup -s"
-not_if "rpm -qa | grep -qx 'ambari-server'"
 end
 
 service "ambari-server" do

@@ -19,8 +19,9 @@ ambariserver.vm.hostname = "c6405.ambari.apache.org"
 ambariserver.vm.network :private_network, ip: "192.168.64.105"
  ambariserver.vm.provision :chef_solo do |chef|
       chef.cookbooks_path = "cookbooks"
+      chef.add_recipe "firewalld"
       chef.add_recipe "apache"
-         end
+               end
 end
 
 
@@ -30,7 +31,9 @@ hadoop.vm.hostname = "c6406.ambari.apache.org"
 hadoop.vm.network :private_network, ip: "192.168.64.106"
     hadoop.vm.provision :chef_solo do |chef|
       chef.cookbooks_path = "cookbooks"
+      chef.add_recipe "firewalld"
       chef.add_recipe "agent"
+chef.json = {'agent' => {:servrerhost => "c6405.ambari.apache.org"}}
         end
   end
 end
