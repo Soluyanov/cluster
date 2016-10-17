@@ -8,6 +8,9 @@ yum_repository 'ambari' do
   action :create
 end
 
+yum_package 'ambari-server' do
+timeout 50000
+end
 
 service 'firewalld' do
   action [:enable, :start]
@@ -20,7 +23,11 @@ firewalld_port '8440/tcp'
 firewalld_port '8441/tcp'
 
 
-package 'ambari-server'
+#package 'ambari-server'
+
+#execute "install ambari-server" do
+ # command "yum install ambari-server -y"
+#end
 
 execute "setup ambari-server" do
   command "ambari-server setup -s"

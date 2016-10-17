@@ -33,7 +33,7 @@ hadoop.vm.network :private_network, ip: "192.168.64.106"
       chef.cookbooks_path = "cookbooks"
       chef.add_recipe "firewalld"
       chef.add_recipe "agent"
-chef.json = {'agent' => {:servrerhost => "c6405.ambari.apache.org"}}
+chef.json = {'agent' => {:serverhost => "c6405.ambari.apache.org"}}
         end
   end
 end
